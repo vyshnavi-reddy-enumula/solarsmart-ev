@@ -1,0 +1,108 @@
+/**
+ * SolarSmart EV — Design Tokens
+ * Coordinated Light and Dark theme variables
+ * Based on #2A7B9B, #57C785, #EDDD53 and Happy Hues Palette 10
+ */
+
+:root {
+  /* Typography Families */
+  --font-sans: 'Onest', system-ui, -apple-system, sans-serif;
+  --font-display: 'Tenor Sans', Georgia, serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Core Color Primitives */
+  --primitive-teal: #2A7B9B;
+  --primitive-teal-dark: #3EA0C4;
+  --primitive-teal-glow: rgba(42, 123, 155, 0.18);
+
+  --primitive-green: #57C785;
+  --primitive-green-dark: #2F9E64;
+  --primitive-green-glow: rgba(87, 199, 133, 0.18);
+
+  --primitive-lime: #EDDD53;
+  --primitive-lime-accessible: #C8B62C;
+  --primitive-lime-glow: rgba(237, 221, 83, 0.18);
+
+  /* Light Theme Semantic Mapping (Happy Hues Palette 10 Inspired) */
+  --color-background: #F8FAFA;
+  --color-surface: #FFFFFF;
+  --color-surface-elevated: #F0F4F6;
+  --color-surface-translucent: rgba(255, 255, 255, 0.85);
+
+  --color-border: #E1E8EC;
+  --color-border-subtle: #EDF2F5;
+  --color-border-glow: rgba(42, 123, 155, 0.25);
+
+  --color-text: #0E202B;
+  --color-text-secondary: #355364;
+  --color-text-muted: #688698;
+
+  --color-primary: #2A7B9B;
+  --color-primary-hover: #22647E;
+  --color-secondary: #2F9E64;
+  --color-accent: #C8B62C;
+
+  --color-status-success: #2F9E64;
+  --color-status-warning: #D97706;
+  --color-status-error: #DC2626;
+  --color-status-idle: #708A99;
+
+  /* Brand Gradient (90deg) */
+  --brand-gradient: linear-gradient(90deg, #2A7B9B 0%, #57C785 50%, #EDDD53 100%);
+  --brand-gradient-subtle: linear-gradient(135deg, rgba(42, 123, 155, 0.08) 0%, rgba(87, 199, 133, 0.06) 50%, rgba(237, 221, 83, 0.05) 100%);
+  --brand-gradient-border: linear-gradient(90deg, #2A7B9B 0%, #57C785 50%, #EDDD53 100%);
+
+  /* Shadow & Elevation Tokens */
+  --shadow-sm: 0 1px 3px 0 rgba(14, 32, 43, 0.05), 0 1px 2px -1px rgba(14, 32, 43, 0.05);
+  --shadow-md: 0 4px 20px -2px rgba(14, 32, 43, 0.06), 0 2px 6px -1px rgba(14, 32, 43, 0.04);
+  --shadow-lg: 0 12px 36px -4px rgba(14, 32, 43, 0.08), 0 4px 12px -2px rgba(14, 32, 43, 0.04);
+  --shadow-dock: 0 16px 40px -8px rgba(14, 32, 43, 0.12), 0 4px 16px -2px rgba(14, 32, 43, 0.06);
+
+  /* Radii Tokens */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --motion-fast: 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-smooth: 250ms cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-bounce: 350ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.dark {
+  /* Dark Theme Semantic Mapping (Deep Slate Night) */
+  --color-background: #0B1319;
+  --color-surface: #13222B;
+  --color-surface-elevated: #1A2F3B;
+  --color-surface-translucent: rgba(19, 34, 43, 0.85);
+
+  --color-border: #223B4A;
+  --color-border-subtle: #192D38;
+  --color-border-glow: rgba(87, 199, 133, 0.25);
+
+  --color-text: #F0F7FA;
+  --color-text-secondary: #9DB7C5;
+  --color-text-muted: #607E90;
+
+  --color-primary: #3EA0C4;
+  --color-primary-hover: #54B0D2;
+  --color-secondary: #57C785;
+  --color-accent: #EDDD53;
+
+  --color-status-success: #57C785;
+  --color-status-warning: #F59E0B;
+  --color-status-error: #EF4444;
+  --color-status-idle: #809AA9;
+
+  /* Brand Gradient (Dark Mode) */
+  --brand-gradient: linear-gradient(90deg, #3EA0C4 0%, #57C785 50%, #EDDD53 100%);
+  --brand-gradient-subtle: linear-gradient(135deg, rgba(62, 160, 196, 0.12) 0%, rgba(87, 199, 133, 0.09) 50%, rgba(237, 221, 83, 0.05) 100%);
+
+  /* Shadow & Elevation Tokens */
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 24px -2px rgba(0, 0, 0, 0.45), 0 2px 8px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 16px 44px -4px rgba(0, 0, 0, 0.6), 0 6px 16px -2px rgba(0, 0, 0, 0.4);
+  --shadow-dock: 0 20px 48px -8px rgba(0, 0, 0, 0.7), 0 6px 20px -2px rgba(0, 0, 0, 0.5);
+}

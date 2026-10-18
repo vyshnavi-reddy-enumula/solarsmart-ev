@@ -1,0 +1,77 @@
+/**
+ * SolarSmart EV — Global Styles & Typography
+ */
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+  transition: background-color var(--motion-smooth), color var(--motion-smooth);
+  overflow-x: hidden;
+}
+
+/* Custom Text Selection */
+::selection {
+  background-color: var(--primitive-teal);
+  color: #FFFFFF;
+}
+
+.dark ::selection {
+  background-color: var(--primitive-green);
+  color: #0B1319;
+}
+
+/* Accessible Focus States */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* Responsive Fluid Typography */
+h1, .h1-fluid {
+  font-size: clamp(2rem, 4.5vw, 3.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  font-weight: 800;
+}
+
+h2, .h2-fluid {
+  font-size: clamp(1.4rem, 2.8vw, 2.1rem);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+
+h3, .h3-fluid {
+  font-size: clamp(1.15rem, 2vw, 1.45rem);
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+  font-weight: 600;
+}
+
+p {
+  color: var(--color-text-secondary);
+}
+
+/* Monospace numerals for precision telemetry */
+.font-tabular {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-feature-settings: 'tnum' on, 'zero' on;
+}
+
+/* Reduced Motion Preference */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

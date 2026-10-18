@@ -1,0 +1,142 @@
+/**
+ * SolarSmart EV — Patterns, Waves & Geometric Treatments
+ * Incorporating Componentry Hero Geometric and ambient nature-tech aesthetics
+ */
+
+/* 1. Low-Contrast Geometric Ambient Mesh Background */
+.bg-geometric-grid {
+  background-image: 
+    linear-gradient(to right, rgba(42, 123, 155, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(42, 123, 155, 0.05) 1px, transparent 1px);
+  background-size: 36px 36px;
+}
+
+.dark .bg-geometric-grid {
+  background-image: 
+    linear-gradient(to right, rgba(62, 160, 196, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(62, 160, 196, 0.06) 1px, transparent 1px);
+  background-size: 36px 36px;
+}
+
+/* 2. Hero Radial Ambient Highlight */
+.hero-ambient-glow {
+  position: absolute;
+  top: -15%;
+  right: -5%;
+  width: 550px;
+  height: 550px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(87, 199, 133, 0.12) 0%, rgba(42, 123, 155, 0.08) 45%, transparent 70%);
+  pointer-events: none;
+  filter: blur(50px);
+  z-index: 0;
+}
+
+.dark .hero-ambient-glow {
+  background: radial-gradient(circle, rgba(87, 199, 133, 0.16) 0%, rgba(62, 160, 196, 0.12) 45%, transparent 70%);
+  filter: blur(60px);
+}
+
+/* 3. Gradient Text Highlight */
+.brand-gradient-text {
+  background: linear-gradient(90deg, #2A7B9B 0%, #2F9E64 50%, #B8A31D 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dark .brand-gradient-text {
+  background: linear-gradient(90deg, #3EA0C4 0%, #57C785 50%, #EDDD53 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* 4. Fine 1px Gradient Border Treatment */
+.gradient-border-card {
+  position: relative;
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  transition: all var(--motion-smooth);
+}
+
+.gradient-border-card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: calc(var(--radius-lg) + 1px);
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(42, 123, 155, 0.4) 0%, rgba(87, 199, 133, 0.3) 50%, rgba(237, 221, 83, 0.2) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.6;
+  transition: opacity var(--motion-smooth);
+}
+
+.gradient-border-card:hover::before {
+  opacity: 1;
+}
+
+/* 5. Geometric Facet Container (Hero Geometric Reference) */
+.hero-geometric-visual {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 380px;
+}
+
+.geometric-facet-primary {
+  width: 100%;
+  max-width: 380px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  z-index: 10;
+  backdrop-filter: blur(12px);
+}
+
+.geometric-facet-backdrop {
+  position: absolute;
+  top: 1.5rem;
+  right: -1rem;
+  width: 90%;
+  height: 90%;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, rgba(42, 123, 155, 0.1) 0%, rgba(87, 199, 133, 0.1) 100%);
+  border: 1px dashed var(--color-border);
+  transform: rotate(3deg);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.dark .geometric-facet-backdrop {
+  background: linear-gradient(135deg, rgba(62, 160, 196, 0.15) 0%, rgba(87, 199, 133, 0.12) 100%);
+}
+
+/* 6. Flowing Wave Section Divider (SVG Contour) */
+.wave-divider-container {
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.wave-divider-svg {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 48px;
+  color: var(--color-border-subtle);
+}
+
+@media (min-width: 640px) {
+  .wave-divider-svg {
+    height: 64px;
+  }
+}
