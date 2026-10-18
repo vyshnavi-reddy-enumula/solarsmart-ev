@@ -1,6 +1,6 @@
 import React from 'react';
-import { Home, UserCheck, Shield, BookOpen } from 'lucide-react';
-import { ActiveView } from '../../types/navigation';
+import { Home, Car, MapPin, Zap, Settings2 } from 'lucide-react';
+import { ActiveView, NAV_ITEMS } from '../../types/navigation';
 import { useRole } from '../../context/RoleContext';
 
 interface MagneticDockProps {
@@ -8,73 +8,34 @@ interface MagneticDockProps {
   onNavigate: (view: ActiveView) => void;
 }
 
-interface DockItem {
-  id: ActiveView;
-  label: string;
-  shortLabel: string;
-  icon: React.ReactNode;
-  badge?: string;
-}
+const ICONS: Record<ActiveView, React.ReactNode> = {
+  home: <Home className="w-5 h-5" />,
+  'my-ev': <Car className="w-5 h-5" />,
+  stations: <MapPin className="w-5 h-5" />,
+  energy: <Zap className="w-5 h-5" />,
+  manage: <Settings2 className="w-5 h-5" />,
+};
 
 export const MagneticDock: React.FC<MagneticDockProps> = ({ activeView, onNavigate }) => {
   const { isOperator } = useRole();
-
-  const dockItems: DockItem[] = [
-    {
-      id: 'home',
-      label: 'Home',
-      shortLabel: 'Home',
-      icon: <Home className="w-4 h-4 sm:w-5 sm:h-5" />,
-    },
-    {
-      id: 'user',
-      label: 'User Dashboard',
-      shortLabel: 'User',
-      icon: <UserCheck className="w-4 h-4 sm:w-5 sm:h-5" />,
-    },
-    {
-      id: 'admin',
-      label: 'Admin Dashboard',
-      shortLabel: 'Admin',
-      icon: <Shield className="w-4 h-4 sm:w-5 sm:h-5" />,
-      badge: isOperator ? 'Active Role' : undefined,
-    },
-    {
-      id: 'about',
-      label: 'About Project',
-      shortLabel: 'About',
-      icon: <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />,
-    },
-  ];
+  const items = NAV_ITEMS.filter((i) => !i.operatorOnly || isOperator);
 
   return (
-    <nav
-      className="magnetic-dock-container"
-      role="navigation"
-      aria-label="Main Application Navigation"
-    >
+    <nav className="magnetic-dock-container" aria-label="Main navigation">
       <div className="magnetic-dock-shell">
-        {dockItems.map((item) => {
+        {items.map((item) => {
           const isActive = activeView === item.id;
           return (
             <button
               key={item.id}
+              type="button"
               onClick={() => onNavigate(item.id)}
-              className={`magnetic-dock-item focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] ${
-                isActive ? 'active' : ''
-              }`}
+              className={`magnetic-dock-item ${isActive ? 'active' : ''}`}
               aria-current={isActive ? 'page' : undefined}
             >
-              <span className="flex-shrink-0">{item.icon}</span>
+              {ICONS[item.id]}
               <span className="hidden sm:inline">{item.label}</span>
-              <span className="inline sm:hidden">{item.shortLabel}</span>
-
-              {item.badge && !isActive && (
-                <span
-                  className="hidden md:inline-block w-2 h-2 rounded-full bg-[var(--primitive-lime)] animate-pulse"
-                  title="Operator View Active"
-                />
-              )}
+              <span className="sm:hidden">{item.shortLabel}</span>
             </button>
           );
         })}

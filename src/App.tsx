@@ -4,57 +4,51 @@ import { DisclaimerBanner } from './components/layout/DisclaimerBanner';
 import { DemoRoleSwitcher } from './components/layout/DemoRoleSwitcher';
 import { MagneticDock } from './components/layout/MagneticDock';
 import { Footer } from './components/layout/Footer';
+import { MethodologyDrawer } from './components/layout/MethodologyDrawer';
 import { HomeView } from './views/HomeView';
-import { UserDashboardView } from './views/UserDashboardView';
+import { MyEVView } from './views/MyEVView';
+import { StationsView } from './views/StationsView';
+import { EnergyView } from './views/EnergyView';
 import { AdminDashboardView } from './views/AdminDashboardView';
-import { AboutView } from './views/AboutView';
 import { ActiveView } from './types/navigation';
 import { useRole } from './context/RoleContext';
 
 export const App: React.FC = () => {
   const [activeView, setActiveView] = useState<ActiveView>('home');
-  const { setRole } = useRole();
+  const [methodologyOpen, setMethodologyOpen] = useState(false);
+  const { setRole, isOperator } = useRole();
+
+  // Station Management is only offered to the demo Operator role (not secure access control).
+  const view: ActiveView = activeView === 'manage' && !isOperator ? 'home' : activeView;
 
   const handleRoleChange = (role: 'user' | 'operator') => {
     setRole(role);
-    // When switching role explicitly, optionally suggest or navigate to the relevant view if on a dashboard
-    if (role === 'operator' && activeView === 'user') {
-      setActiveView('admin');
-    } else if (role === 'user' && activeView === 'admin') {
-      setActiveView('user');
-    }
+    if (role === 'operator' && activeView === 'my-ev') setActiveView('manage');
+    else if (role === 'user' && activeView === 'manage') setActiveView('my-ev');
   };
 
-  const handleNavigate = (view: ActiveView) => {
-    setActiveView(view);
-    // Smoothly scroll to top of viewport on view change
+  const handleNavigate = (next: ActiveView) => {
+    setActiveView(next);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-geometric-grid transition-colors duration-200">
-      {/* Top Application Header */}
-      <Header />
-
-      {/* Academic Scope Disclaimer Banner */}
+      <Header onOpenMethodology={() => setMethodologyOpen(true)} />
       <DisclaimerBanner />
-
-      {/* Client-Side Demo Role Switcher */}
       <DemoRoleSwitcher onRoleChange={handleRoleChange} />
 
-      {/* Main Content Area with Strict Bottom Clearance */}
       <main className="flex-1 app-container page-content-padding">
-        {activeView === 'home' && <HomeView onNavigate={handleNavigate} />}
-        {activeView === 'user' && <UserDashboardView />}
-        {activeView === 'admin' && <AdminDashboardView />}
-        {activeView === 'about' && <AboutView />}
+        {view === 'home' && <HomeView onNavigate={handleNavigate} />}
+        {view === 'my-ev' && <MyEVView />}
+        {view === 'stations' && <StationsView />}
+        {view === 'energy' && <EnergyView />}
+        {view === 'manage' && <AdminDashboardView />}
       </main>
 
-      {/* Responsive Floating Magnetic Navigation Dock */}
-      <MagneticDock activeView={activeView} onNavigate={handleNavigate} />
-
-      {/* Application Footer */}
-      <Footer activeView={activeView} onNavigate={handleNavigate} />
+      <MagneticDock activeView={view} onNavigate={handleNavigate} />
+      <Footer activeView={view} onNavigate={handleNavigate} onOpenMethodology={() => setMethodologyOpen(true)} />
+      <MethodologyDrawer open={methodologyOpen} onClose={() => setMethodologyOpen(false)} />
     </div>
   );
 };

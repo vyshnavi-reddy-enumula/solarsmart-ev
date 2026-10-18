@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Shield, UserCheck, SunMedium, Radio, Cpu, Layers, CheckCircle } from 'lucide-react';
+import { ArrowRight, MapPin, Car, SunMedium, Radio, Cpu, Layers, CheckCircle } from 'lucide-react';
 import { ActiveView } from '../types/navigation';
 import { useStationData } from '../context/StationDataContext';
 import { HeroGeometricVisual } from '../components/common/HeroGeometricVisual';
@@ -36,20 +36,20 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
             {/* Action Pathways */}
             <div className="pt-2 flex flex-wrap gap-4">
               <button
-                onClick={() => onNavigate('user')}
+                onClick={() => onNavigate('my-ev')}
                 className="btn-primary"
               >
-                <UserCheck className="w-4 h-4" />
-                <span>Open User Dashboard</span>
+                <Car className="w-4 h-4" />
+                <span>Open My EV</span>
                 <ArrowRight className="w-4 h-4 ml-0.5" />
               </button>
 
               <button
-                onClick={() => onNavigate('admin')}
+                onClick={() => onNavigate('stations')}
                 className="btn-secondary"
               >
-                <Shield className="w-4 h-4 text-[var(--color-primary)]" />
-                <span>Open Admin Dashboard</span>
+                <MapPin className="w-4 h-4 text-[var(--color-primary)]" />
+                <span>Find Stations</span>
               </button>
             </div>
 
@@ -129,7 +129,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
             {/* Card 2: RFID Authentication */}
             <div className="card-premium space-y-3">
               <div className="w-10 h-10 rounded-xl bg-[var(--primitive-teal)]/10 text-[var(--color-primary)] flex items-center justify-center">
-                <UserCheck className="w-5 h-5" />
+                <Car className="w-5 h-5" />
               </div>
               <h3 className="text-base font-bold text-[var(--color-text)]">
                 RFID Access & Identification
@@ -161,7 +161,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
           Single Operational Prototype Boundary
         </h3>
         <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] leading-relaxed">
-          In strict compliance with the reference documents, <strong>SolarSmart Base 01</strong> is the sole operational charging prototype built and tested. Multi-station fleet management and municipal smart-city integrations are documented as conceptual future scope in the About section.
+          <strong>SolarSmart Base 01</strong> is the only charging prototype. Multi-station management and smart-city integrations are future scope (see Methodology).
         </p>
       </section>
     </div>

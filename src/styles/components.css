@@ -253,3 +253,12 @@
 .notice-warning { border-color: rgba(217,119,6,.35); background: rgba(217,119,6,.08); }
 .notice-simulated { border-color: rgba(200,182,44,.4); background: var(--color-status-simulated-bg); }
 .btn-secondary:disabled, .btn-primary:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+/* 7. Methodology drawer */
+@keyframes drawer-in { from { transform: translateX(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+.drawer-panel { animation: drawer-in var(--motion-smooth); }
+
+/* 8. Compact dock on narrow screens (5 items) */
+@media (max-width: 639px) {
+  .magnetic-dock-item { flex-direction: column; gap: 0.125rem; padding: 0.5rem 0.625rem; font-size: 0.6875rem; }
+}
