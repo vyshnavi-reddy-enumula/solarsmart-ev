@@ -46,6 +46,9 @@
   --color-status-warning: #D97706;
   --color-status-error: #DC2626;
   --color-status-idle: #708A99;
+  --color-status-simulated: #8A7708;      /* readable solar-yellow text on light */
+  --color-status-simulated-bg: rgba(237, 221, 83, 0.18);
+  --color-status-unavailable: #5B7686;
 
   /* Brand Gradient (90deg) */
   --brand-gradient: linear-gradient(90deg, #2A7B9B 0%, #57C785 50%, #EDDD53 100%);
@@ -95,6 +98,9 @@
   --color-status-warning: #F59E0B;
   --color-status-error: #EF4444;
   --color-status-idle: #809AA9;
+  --color-status-simulated: #EDDD53;
+  --color-status-simulated-bg: rgba(237, 221, 83, 0.14);
+  --color-status-unavailable: #8FA7B5;
 
   /* Brand Gradient (Dark Mode) */
   --brand-gradient: linear-gradient(90deg, #3EA0C4 0%, #57C785 50%, #EDDD53 100%);
