@@ -3,6 +3,8 @@ import {
   StationDataState,
   DataSourceMode,
   StationOperationalStatus,
+  HardwareLinkStatus,
+  TelemetryReadings,
 } from '../types/station';
 
 interface StationDataContextType {
@@ -10,36 +12,66 @@ interface StationDataContextType {
   setDataSourceMode: (mode: DataSourceMode) => void;
   setOperationalStatus: (status: StationOperationalStatus) => void;
   simulateStateChange: (updates: Partial<StationDataState>) => void;
+  /** Demo only: force the simulated heartbeat to go stale. */
+  simulateStale: () => void;
+  /** Demo only: clear a forced stale condition and refresh the simulated heartbeat. */
+  refreshTelemetry: () => void;
+  simulatedStale: boolean;
   isStale: boolean;
   secondsSinceLastHeartbeat: number | null;
-  refreshTelemetry: () => void;
 }
 
 const DEFAULT_STALE_THRESHOLD_SECONDS = 10;
+const DEMO_TICK_MS = 3000;
 
-// Baseline initial state: Live Hardware mode starts in disconnected/standby
-// to protect data integrity and avoid claiming unverified connectivity.
+// Demo fixture. These values are SIMULATED and must always be labelled as such in the UI.
+// Vehicle presence and solar state stay null: no sensor for them is confirmed.
+const makeDemoReadings = (): TelemetryReadings => {
+  const voltage = 4.92; // V
+  const current = 380; // mA
+  return {
+    voltage,
+    current,
+    power: Number(((voltage * current) / 1000).toFixed(2)), // derived P = V x I
+    vehicleDetected: null,
+    solarActive: null,
+    timestamp: new Date(),
+  };
+};
+
+const EMPTY_READINGS: TelemetryReadings = {
+  voltage: null,
+  current: null,
+  power: null,
+  vehicleDetected: null,
+  solarActive: null,
+  timestamp: null,
+};
+
+const DEMO_HARDWARE: HardwareLinkStatus = {
+  esp32Gateway: 'simulated',
+  arduinoLocal: 'simulated',
+  ina219Sensor: 'simulated',
+  rc522Reader: 'simulated',
+  irVehicleSensor: 'unavailable', // presence sensor is not integrated
+};
+
+const LIVE_HARDWARE: HardwareLinkStatus = {
+  esp32Gateway: 'unavailable',
+  arduinoLocal: 'unavailable',
+  ina219Sensor: 'unavailable',
+  rc522Reader: 'unavailable',
+  irVehicleSensor: 'unavailable',
+};
+
 const initialStationState: StationDataState = {
   stationId: 'base-01',
   stationName: 'SolarSmart Base 01',
-  operationalStatus: 'available',
-  dataSourceMode: 'demo', // Defaults to demo for initial shell development, clearly labelled
-  connectionStatus: 'connected',
-  hardware: {
-    esp32Gateway: true,
-    arduinoLocal: true,
-    ina219Sensor: true,
-    rc522Reader: true,
-    irVehicleSensor: false, // Marked uninstalled per hardware review
-  },
-  latestReadings: {
-    voltage: null,
-    current: null,
-    power: null,
-    vehicleDetected: null,
-    solarActive: null,
-    timestamp: null,
-  },
+  operationalStatus: 'available', // simulated while in demo mode
+  dataSourceMode: 'demo',
+  connectionStatus: 'connected', // simulated link while in demo mode
+  hardware: DEMO_HARDWARE,
+  latestReadings: makeDemoReadings(),
   lastHeartbeat: new Date(),
   staleThresholdSeconds: DEFAULT_STALE_THRESHOLD_SECONDS,
   isLoading: false,
@@ -50,108 +82,94 @@ const StationDataContext = createContext<StationDataContextType | undefined>(und
 
 export const StationDataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, setState] = useState<StationDataState>(initialStationState);
+  const [simulatedStale, setSimulatedStale] = useState(false);
   const [secondsSinceLastHeartbeat, setSecondsSinceLastHeartbeat] = useState<number | null>(0);
 
-  // Watchdog timer to track freshness and evaluate stale threshold
+  // Simulated heartbeat (demo only). Pauses while a stale condition is being simulated.
+  useEffect(() => {
+    if (state.dataSourceMode !== 'demo' || simulatedStale) return;
+    const timer = setInterval(() => {
+      setState((prev) =>
+        prev.dataSourceMode === 'demo'
+          ? { ...prev, lastHeartbeat: new Date(), connectionStatus: 'connected', latestReadings: makeDemoReadings() }
+          : prev
+      );
+    }, DEMO_TICK_MS);
+    return () => clearInterval(timer);
+  }, [state.dataSourceMode, simulatedStale]);
+
+  // Freshness watchdog: evaluates the stale threshold for whichever source is active.
   useEffect(() => {
     const timer = setInterval(() => {
-      if (state.lastHeartbeat) {
-        const diffSeconds = Math.floor((Date.now() - state.lastHeartbeat.getTime()) / 1000);
-        setSecondsSinceLastHeartbeat(diffSeconds);
-
-        // Auto-update connection status to stale if threshold exceeded
-        if (
-          diffSeconds >= state.staleThresholdSeconds &&
-          state.connectionStatus === 'connected' &&
-          state.dataSourceMode === 'live'
-        ) {
-          setState((prev) => ({
-            ...prev,
-            connectionStatus: 'stale',
-          }));
-        }
-      } else {
+      if (!state.lastHeartbeat) {
         setSecondsSinceLastHeartbeat(null);
+        return;
+      }
+      const diff = Math.floor((Date.now() - state.lastHeartbeat.getTime()) / 1000);
+      setSecondsSinceLastHeartbeat(diff);
+      if (diff >= state.staleThresholdSeconds && state.connectionStatus === 'connected') {
+        setState((prev) => ({ ...prev, connectionStatus: 'stale' }));
       }
     }, 1000);
-
     return () => clearInterval(timer);
-  }, [state.lastHeartbeat, state.staleThresholdSeconds, state.connectionStatus, state.dataSourceMode]);
+  }, [state.lastHeartbeat, state.staleThresholdSeconds, state.connectionStatus]);
 
   const setDataSourceMode = useCallback((mode: DataSourceMode) => {
-    setState((prev) => {
-      if (mode === 'live') {
-        // When switching to Live mode, truthfully reflect that physical ESP32 gateway is not yet integrated
-        return {
-          ...prev,
-          dataSourceMode: 'live',
-          connectionStatus: 'unavailable',
-          hardware: {
-            esp32Gateway: false,
-            arduinoLocal: false,
-            ina219Sensor: false,
-            rc522Reader: false,
-            irVehicleSensor: false,
-          },
-          latestReadings: {
-            voltage: null,
-            current: null,
-            power: null,
-            vehicleDetected: null,
-            solarActive: null,
-            timestamp: null,
-          },
-          lastHeartbeat: null,
-          errorMessage: 'Physical ESP32 gateway not detected. Live hardware telemetry will appear once controller is connected.',
-        };
-      } else {
-        // When in Demo mode, provide clear mock status for UI testing
-        return {
-          ...prev,
-          dataSourceMode: 'demo',
-          connectionStatus: 'connected',
-          hardware: {
-            esp32Gateway: true,
-            arduinoLocal: true,
-            ina219Sensor: true,
-            rc522Reader: true,
-            irVehicleSensor: false,
-          },
-          lastHeartbeat: new Date(),
-          errorMessage: null,
-        };
-      }
-    });
+    setSimulatedStale(false);
+    setState((prev) =>
+      mode === 'live'
+        ? {
+            ...prev,
+            dataSourceMode: 'live',
+            operationalStatus: 'unknown', // never claim availability without a real source
+            connectionStatus: 'unavailable',
+            hardware: LIVE_HARDWARE,
+            latestReadings: EMPTY_READINGS,
+            lastHeartbeat: null,
+            errorMessage: 'No live data source is connected. Readings will appear here once one is implemented and verified.',
+          }
+        : {
+            ...prev,
+            dataSourceMode: 'demo',
+            operationalStatus: 'available',
+            connectionStatus: 'connected',
+            hardware: DEMO_HARDWARE,
+            latestReadings: makeDemoReadings(),
+            lastHeartbeat: new Date(),
+            errorMessage: null,
+          }
+    );
   }, []);
 
   const setOperationalStatus = useCallback((status: StationOperationalStatus) => {
-    setState((prev) => ({
-      ...prev,
-      operationalStatus: status,
-      lastHeartbeat: new Date(),
-    }));
+    setState((prev) => (prev.dataSourceMode === 'demo' ? { ...prev, operationalStatus: status } : prev));
   }, []);
 
   const simulateStateChange = useCallback((updates: Partial<StationDataState>) => {
-    setState((prev) => ({
-      ...prev,
-      ...updates,
-      lastHeartbeat: updates.lastHeartbeat !== undefined ? updates.lastHeartbeat : prev.lastHeartbeat,
-    }));
+    setState((prev) => (prev.dataSourceMode === 'demo' ? { ...prev, ...updates } : prev));
+  }, []);
+
+  const simulateStale = useCallback(() => {
+    setSimulatedStale(true);
+    setState((prev) =>
+      prev.dataSourceMode === 'demo' ? { ...prev, lastHeartbeat: new Date(Date.now() - 15000) } : prev
+    );
   }, []);
 
   const refreshTelemetry = useCallback(() => {
-    setState((prev) => ({
-      ...prev,
-      lastHeartbeat: new Date(),
-      connectionStatus: prev.dataSourceMode === 'demo' ? 'connected' : prev.connectionStatus,
-    }));
+    setSimulatedStale(false);
+    setState((prev) =>
+      prev.dataSourceMode === 'demo'
+        ? { ...prev, lastHeartbeat: new Date(), connectionStatus: 'connected', latestReadings: makeDemoReadings() }
+        : prev
+    );
   }, []);
 
   const isStale =
     secondsSinceLastHeartbeat !== null &&
     secondsSinceLastHeartbeat >= state.staleThresholdSeconds &&
-    state.connectionStatus !== 'disconnected';
+    state.connectionStatus !== 'disconnected' &&
+    state.connectionStatus !== 'unavailable';
 
   return (
     <StationDataContext.Provider
@@ -160,9 +178,11 @@ export const StationDataProvider: React.FC<{ children: React.ReactNode }> = ({ c
         setDataSourceMode,
         setOperationalStatus,
         simulateStateChange,
+        simulateStale,
+        refreshTelemetry,
+        simulatedStale,
         isStale,
         secondsSinceLastHeartbeat,
-        refreshTelemetry,
       }}
     >
       {children}

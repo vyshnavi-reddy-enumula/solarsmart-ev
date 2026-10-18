@@ -1,5 +1,6 @@
 import React from 'react';
-import { SunMedium, Radio, Cpu, Wifi, CheckCircle2 } from 'lucide-react';
+import { SunMedium, Radio, Cpu, Wifi } from 'lucide-react';
+import { DataBadge } from './DataBadge';
 import { useStationData } from '../../context/StationDataContext';
 
 export const HeroGeometricVisual: React.FC = () => {
@@ -43,7 +44,7 @@ export const HeroGeometricVisual: React.FC = () => {
               </span>
             </div>
           </div>
-          <span className="text-[11px] font-semibold text-[var(--color-secondary)]">Ready</span>
+          <DataBadge kind="unavailable" label="Not measured" />
         </div>
 
         {/* Node 2: Wireless Inductive Transfer */}
@@ -61,9 +62,11 @@ export const HeroGeometricVisual: React.FC = () => {
               </span>
             </div>
           </div>
-          <span className="text-[11px] font-semibold text-[var(--color-primary)]">
-            {state.operationalStatus === 'charging' ? 'Energized' : 'Standby'}
-          </span>
+          {state.dataSourceMode === 'demo' ? (
+            <DataBadge kind="simulated" label={state.operationalStatus === 'charging' ? 'Simulated: active' : 'Simulated: standby'} />
+          ) : (
+            <DataBadge kind="unavailable" />
+          )}
         </div>
 
         {/* Node 3: Embedded Controller Bus */}
@@ -77,21 +80,21 @@ export const HeroGeometricVisual: React.FC = () => {
                 Arduino UNO & ESP32
               </span>
               <span className="text-[11px] text-[var(--color-text-muted)]">
-                RC522 SPI ↔ Wi-Fi Link
+                RFID · sensing · Wi-Fi (planned)
               </span>
             </div>
           </div>
-          <CheckCircle2 className="w-4 h-4 text-[var(--color-secondary)]" />
+          <DataBadge kind={state.dataSourceMode === 'demo' ? 'simulated' : 'unavailable'} />
         </div>
 
         {/* Bottom Hardware Metric Pill */}
         <div className="pt-1 flex items-center justify-between text-[11px] text-[var(--color-text-muted)]">
           <span className="flex items-center space-x-1">
             <Wifi className="w-3.5 h-3.5 text-[var(--color-primary)]" />
-            <span>Telemetry Bus</span>
+            <span>Telemetry</span>
           </span>
           <span className="font-mono">
-            {state.dataSourceMode === 'demo' ? 'SIMULATED FEED' : 'HARDWARE BUS'}
+            {state.dataSourceMode === 'demo' ? 'SIMULATED FEED' : 'NO DATA SOURCE'}
           </span>
         </div>
       </div>

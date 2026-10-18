@@ -65,12 +65,11 @@ export const Footer: React.FC<FooterProps> = ({ activeView, onNavigate }) => {
 
         <div className="pt-4 border-t border-[var(--color-border-subtle)] flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px]">
           <div>
-            Data Stream Status:{' '}
+            Data source:{' '}
             <span className="font-semibold text-[var(--color-text-secondary)] uppercase">
-              {state.dataSourceMode === 'demo' ? 'Deterministic Demo Mode' : 'Live Hardware Mode (Awaiting Link)'}
+              {state.dataSourceMode === 'demo' ? 'Simulated demo data' : 'Live mode: no data source connected'}
             </span>
           </div>
-          <div>Milestone 2.5 Visual Design & CSS Architecture</div>
         </div>
       </div>
     </footer>

@@ -27,6 +27,12 @@ export const Header: React.FC = () => {
           dotClass: 'bg-red-500',
           pillClass: 'status-pill-offline',
         };
+      case 'unknown':
+        return {
+          label: 'STATUS UNKNOWN',
+          dotClass: 'bg-[var(--color-status-idle)]',
+          pillClass: 'status-pill-warning',
+        };
       default:
         return {
           label: 'MAINTENANCE',
@@ -66,7 +72,7 @@ export const Header: React.FC = () => {
           {/* Station Status Pill */}
           <div className={`hidden sm:inline-flex status-pill ${statusBadge.pillClass}`}>
             <span className={`w-2 h-2 rounded-full ${statusBadge.dotClass}`} />
-            <span>{statusBadge.label}</span>
+            <span>{statusBadge.label}{state.dataSourceMode === 'demo' ? ' · SIMULATED' : ''}</span>
           </div>
 
           {/* Data Source Mode Toggle Pill (Live vs Demo) */}
@@ -74,12 +80,13 @@ export const Header: React.FC = () => {
             <button
               type="button"
               onClick={() => setDataSourceMode('live')}
+              aria-pressed={state.dataSourceMode === 'live'}
               className={`px-2.5 py-1 rounded-md font-medium transition-all ${
                 state.dataSourceMode === 'live'
                   ? 'bg-[var(--color-surface)] text-[var(--color-primary)] shadow-sm font-semibold'
                   : 'text-[var(--color-text-muted)] hover:text-[var(--color-text)]'
               }`}
-              title="Switch to Live Hardware Feed (will show disconnected until hardware is integrated)"
+              title="Live data: no source connected yet"
             >
               <span className="flex items-center space-x-1.5">
                 <Radio className="w-3 h-3" />
@@ -90,6 +97,7 @@ export const Header: React.FC = () => {
             <button
               type="button"
               onClick={() => setDataSourceMode('demo')}
+              aria-pressed={state.dataSourceMode === 'demo'}
               className={`px-2.5 py-1 rounded-md font-medium transition-all ${
                 state.dataSourceMode === 'demo'
                   ? 'bg-[var(--color-primary)] text-white shadow-sm font-semibold'

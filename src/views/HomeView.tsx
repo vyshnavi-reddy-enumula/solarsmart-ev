@@ -21,7 +21,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
           <div className="space-y-6 z-10">
             <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide bg-[var(--primitive-green)]/10 text-[var(--color-secondary)] border border-[var(--primitive-green)]/20 shadow-xs">
               <span className="w-2 h-2 rounded-full bg-[var(--primitive-green)] animate-pulse" />
-              <span>Operational Station: {state.stationName}</span>
+              <span>{state.stationName} · {state.dataSourceMode === 'demo' ? 'Simulated demo data' : 'Awaiting live data'}</span>
             </div>
 
             <h1 className="h1-fluid text-[var(--color-text)]">
@@ -108,7 +108,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
                 Inductive Wireless Energy Transfer
               </h3>
               <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">
-                Retaining the physical foundation of the team's December 2025 prototype, primary and secondary electromagnetic induction coils safely transfer power across an air gap to the receiver circuit on a scaled toy electric vehicle.
+                Retaining the physical foundation of the team's December 2025 prototype, primary and secondary electromagnetic induction coils transfer power across an air gap to the receiver circuit on a scaled toy electric vehicle.
               </p>
             </div>
 
@@ -135,7 +135,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
                 RFID Access & Identification
               </h3>
               <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] leading-relaxed">
-                RC522 reader securely authorizes sessions before power transfer begins. RFID functions solely for identification and does not measure battery state of charge.
+                The RC522 reader is planned to identify cards or tags for access feedback. RFID does not measure battery state of charge.
               </p>
             </div>
 
@@ -148,7 +148,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
                 Separated Controller Roles
               </h3>
               <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] leading-relaxed">
-                Arduino UNO manages local sensor sampling and indicator state logic, while the ESP32 acts as the dedicated Wi-Fi telemetry bridge to the web application.
+                Planned roles: the Arduino UNO handles local sensing and indicators, while the ESP32 provides Wi-Fi communication. The link between them is still to be decided.
               </p>
             </div>
           </div>
