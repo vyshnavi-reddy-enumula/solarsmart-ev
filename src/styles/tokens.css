@@ -35,7 +35,7 @@
 
   --color-text: #0E202B;
   --color-text-secondary: #355364;
-  --color-text-muted: #688698;
+  --color-text-muted: #54707F;
 
   --color-primary: #2A7B9B;
   --color-primary-hover: #22647E;
@@ -46,9 +46,9 @@
   --color-status-warning: #D97706;
   --color-status-error: #DC2626;
   --color-status-idle: #708A99;
-  --color-status-simulated: #8A7708;      /* readable solar-yellow text on light */
+  --color-status-simulated: #6B5B00;      /* readable solar-yellow text on light */
   --color-status-simulated-bg: rgba(237, 221, 83, 0.18);
-  --color-status-unavailable: #5B7686;
+  --color-status-unavailable: #4E6877;
 
   /* Brand Gradient (90deg) */
   --brand-gradient: linear-gradient(90deg, #2A7B9B 0%, #57C785 50%, #EDDD53 100%);
@@ -87,7 +87,7 @@
 
   --color-text: #F0F7FA;
   --color-text-secondary: #9DB7C5;
-  --color-text-muted: #607E90;
+  --color-text-muted: #8AA5B5;
 
   --color-primary: #3EA0C4;
   --color-primary-hover: #54B0D2;

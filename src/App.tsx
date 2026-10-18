@@ -39,7 +39,7 @@ export const App: React.FC = () => {
       <DemoRoleSwitcher onRoleChange={handleRoleChange} />
 
       <main className="flex-1 app-container page-content-padding">
-        {view === 'home' && <HomeView onNavigate={handleNavigate} />}
+        {view === 'home' && <HomeView onNavigate={handleNavigate} onOpenMethodology={() => setMethodologyOpen(true)} />}
         {view === 'my-ev' && <MyEVView />}
         {view === 'stations' && <StationsView />}
         {view === 'energy' && <EnergyView />}

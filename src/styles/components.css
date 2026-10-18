@@ -234,7 +234,9 @@
 .data-badge-simulated { color: var(--color-status-simulated); background: var(--color-status-simulated-bg); border-color: rgba(200,182,44,.4); }
 .data-badge-unavailable { color: var(--color-status-unavailable); background: var(--color-surface-elevated); border-color: var(--color-border); }
 .data-badge-unavailable::before { background: transparent; border: 1.5px solid currentColor; }
-.data-badge-stale { color: var(--color-status-warning); background: rgba(217,119,6,.12); border-color: rgba(217,119,6,.3); }
+.data-badge-stale { color: #9A4A06; background: rgba(217,119,6,.12); border-color: rgba(217,119,6,.3); }
+
+.dark .data-badge-stale { color: var(--color-status-warning); }
 
 /* 6. Inline notices */
 .notice {
