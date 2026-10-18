@@ -21,6 +21,17 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMethodology }) => {
   const iconBtn =
     'p-2.5 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] hover:border-[var(--color-border-glow)] transition-all shadow-sm';
 
+  const toggle = (
+          <div className="inline-flex p-0.5 rounded-lg bg-[var(--color-surface-elevated)] border border-[var(--color-border)] text-xs" role="group" aria-label="Data source">
+            <button type="button" onClick={() => setDataSourceMode('live')} aria-pressed={state.dataSourceMode === 'live'} title="Live data: no source connected yet" className={segment(state.dataSourceMode === 'live')}>
+              <span className="flex items-center gap-1.5"><Radio className="w-3 h-3" />Live</span>
+            </button>
+            <button type="button" onClick={() => setDataSourceMode('demo')} aria-pressed={state.dataSourceMode === 'demo'} title="Simulated demo data" className={segment(state.dataSourceMode === 'demo')}>
+              <span className="flex items-center gap-1.5"><Activity className="w-3 h-3" />Demo</span>
+            </button>
+          </div>
+  );
+
   return (
     <header className="sticky top-0 z-40 w-full backdrop-blur-xl bg-[var(--color-surface-translucent)] border-b border-[var(--color-border)] transition-colors duration-200">
       <div className="app-container h-16 sm:h-20 flex items-center justify-between gap-4">
@@ -38,15 +49,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMethodology }) => {
 
         <div className="flex items-center gap-2 sm:gap-3">
           <StationStatusPill className="hidden sm:inline-flex" />
-
-          <div className="inline-flex p-0.5 rounded-lg bg-[var(--color-surface-elevated)] border border-[var(--color-border)] text-xs" role="group" aria-label="Data source">
-            <button type="button" onClick={() => setDataSourceMode('live')} aria-pressed={state.dataSourceMode === 'live'} title="Live data: no source connected yet" className={segment(state.dataSourceMode === 'live')}>
-              <span className="flex items-center gap-1.5"><Radio className="w-3 h-3" />Live</span>
-            </button>
-            <button type="button" onClick={() => setDataSourceMode('demo')} aria-pressed={state.dataSourceMode === 'demo'} title="Simulated demo data" className={segment(state.dataSourceMode === 'demo')}>
-              <span className="flex items-center gap-1.5"><Activity className="w-3 h-3" />Demo</span>
-            </button>
-          </div>
+          <div className="hidden sm:block">{toggle}</div>
 
           <button type="button" onClick={onOpenMethodology} className={iconBtn} aria-label="Open methodology" title="Methodology">
             <BookOpen className="w-5 h-5" />
@@ -56,8 +59,9 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMethodology }) => {
           </button>
         </div>
       </div>
-      <div className="sm:hidden app-container pb-3">
+      <div className="sm:hidden app-container pb-3 flex items-center justify-between gap-3">
         <StationStatusPill />
+        {toggle}
       </div>
     </header>
   );

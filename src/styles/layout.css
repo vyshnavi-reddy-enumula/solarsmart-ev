@@ -28,6 +28,7 @@
 
 /* Page Content Padding — Essential to keep bottom dock from hiding content */
 .page-content-padding {
+  overflow-x: clip; /* contains decorative glows without creating a scroll container */
   padding-top: 2.5rem;
   padding-bottom: 9rem; /* 144px bottom padding ensures zero overlap on mobile/desktop */
 }
@@ -65,14 +66,14 @@
 /* Asymmetric Hero Grid */
 .hero-geometric-grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 2.5rem;
   align-items: center;
 }
 
 @media (min-width: 1024px) {
   .hero-geometric-grid {
-    grid-template-columns: 1.15fr 0.85fr;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
     gap: 4rem;
   }
 }

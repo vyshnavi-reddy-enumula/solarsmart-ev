@@ -30,7 +30,7 @@ export const HeroGeometricVisual: React.FC = () => {
         </div>
 
         {/* Node 1: Solar Harvesting */}
-        <div className="flex items-center justify-between p-3 rounded-xl bg-[var(--color-surface-elevated)] border border-[var(--color-border-subtle)]">
+        <div className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-xl bg-[var(--color-surface-elevated)] border border-[var(--color-border-subtle)]">
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 rounded-lg bg-[var(--primitive-teal)]/10 text-[var(--color-primary)] flex items-center justify-center">
               <SunMedium className="w-4 h-4" />
@@ -48,7 +48,7 @@ export const HeroGeometricVisual: React.FC = () => {
         </div>
 
         {/* Node 2: Wireless Inductive Transfer */}
-        <div className="flex items-center justify-between p-3 rounded-xl bg-[var(--color-surface-elevated)] border border-[var(--color-border-subtle)]">
+        <div className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-xl bg-[var(--color-surface-elevated)] border border-[var(--color-border-subtle)]">
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 rounded-lg bg-[var(--primitive-green)]/15 text-[var(--primitive-green-dark)] dark:text-[var(--primitive-green)] flex items-center justify-center">
               <Radio className="w-4 h-4" />
@@ -70,7 +70,7 @@ export const HeroGeometricVisual: React.FC = () => {
         </div>
 
         {/* Node 3: Embedded Controller Bus */}
-        <div className="flex items-center justify-between p-3 rounded-xl bg-[var(--color-surface-elevated)] border border-[var(--color-border-subtle)]">
+        <div className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-xl bg-[var(--color-surface-elevated)] border border-[var(--color-border-subtle)]">
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 rounded-lg bg-[var(--primitive-lime)]/20 text-[#A08A12] dark:text-[var(--primitive-lime)] flex items-center justify-center">
               <Cpu className="w-4 h-4" />
