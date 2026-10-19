@@ -4,6 +4,7 @@ import { DisclaimerBanner } from './components/layout/DisclaimerBanner';
 import { DemoRoleSwitcher } from './components/layout/DemoRoleSwitcher';
 import { MagneticDock } from './components/layout/MagneticDock';
 import { Footer } from './components/layout/Footer';
+import { DemoSignInDialog } from './components/account/DemoSignInDialog';
 import { MethodologyDrawer } from './components/layout/MethodologyDrawer';
 import { HomeView } from './views/HomeView';
 import { MyEVView } from './views/MyEVView';
@@ -48,6 +49,7 @@ export const App: React.FC = () => {
 
       <MagneticDock activeView={view} onNavigate={handleNavigate} />
       <Footer activeView={view} onNavigate={handleNavigate} onOpenMethodology={() => setMethodologyOpen(true)} />
+      <DemoSignInDialog />
       <MethodologyDrawer open={methodologyOpen} onClose={() => setMethodologyOpen(false)} />
     </div>
   );

@@ -5,9 +5,11 @@ import { useStationData } from '../../context/StationDataContext';
 interface PageHeaderProps {
   title: string;
   description: string;
+  /** Replaces the default data-source badge. */
+  badge?: React.ReactNode;
 }
 
-export const PageHeader: React.FC<PageHeaderProps> = ({ title, description }) => {
+export const PageHeader: React.FC<PageHeaderProps> = ({ title, description, badge }) => {
   const { state } = useStationData();
   const isDemo = state.dataSourceMode === 'demo';
   return (
@@ -16,7 +18,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ title, description }) =>
         <h1 className="h2-fluid text-[var(--color-text)]">{title}</h1>
         <p className="text-sm text-[var(--color-text-secondary)] max-w-xl">{description}</p>
       </div>
-      <DataBadge kind={isDemo ? 'simulated' : 'unavailable'} label={isDemo ? 'Simulated demo data' : 'No live data source'} />
+      {badge ?? <DataBadge kind={isDemo ? 'simulated' : 'unavailable'} label={isDemo ? 'Simulated demo data' : 'No live data source'} />}
     </div>
   );
 };

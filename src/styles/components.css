@@ -264,3 +264,18 @@
 @media (max-width: 639px) {
   .magnetic-dock-item { flex-direction: column; gap: 0.125rem; padding: 0.5rem 0.625rem; font-size: 0.6875rem; }
 }
+
+/* 9. Station map: pins, labels, dark-theme tiles */
+.station-leaflet { background: var(--color-surface-elevated); font-family: var(--font-sans); }
+.ev-pin-wrap { background: none; border: none; }
+.ev-pin { width: 40px; height: 48px; transform-origin: 50% 96%; transition: transform 200ms var(--motion-smooth); filter: drop-shadow(0 3px 4px rgba(14,32,43,.35)); }
+.ev-pin-selected { transform: scale(1.3); }
+.leaflet-marker-icon:focus-visible .ev-pin, .fallback-pin:focus-visible { outline: 3px solid var(--color-primary); outline-offset: 2px; border-radius: 8px; }
+.area-label-wrap { background: none; border: none; }
+.area-label { display: inline-block; transform: translate(-50%, 14px); white-space: nowrap; font-size: 12px; font-weight: 700; color: #1B5F78; background: rgba(255,255,255,.85); padding: 1px 8px; border-radius: 999px; box-shadow: 0 1px 3px rgba(0,0,0,.15); }
+.dark .area-label { color: #E6F2F7; background: rgba(19,34,43,.85); }
+.dark .station-leaflet .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(.92) contrast(.9) saturate(.8); }
+.dark .station-leaflet .leaflet-control-zoom a { background: var(--color-surface); color: var(--color-text); border-color: var(--color-border); }
+.dark .station-leaflet .leaflet-control-attribution { background: rgba(19,34,43,.8); color: var(--color-text-muted); }
+.dark .station-leaflet .leaflet-control-attribution a { color: var(--color-primary); }
+.station-leaflet .leaflet-control-attribution { font-size: 10px; }

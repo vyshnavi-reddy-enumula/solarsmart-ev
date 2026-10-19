@@ -15,7 +15,7 @@ interface HomeViewProps {
 const ACTIONS: { id: ActiveView; title: string; text: string; icon: React.ReactNode }[] = [
   { id: 'my-ev', title: 'My EV', text: 'RFID access feedback, session state and vehicle presence.', icon: <Car className="w-5 h-5" /> },
   { id: 'energy', title: 'Energy', text: 'Voltage, current and power, each labelled by its source.', icon: <Zap className="w-5 h-5" /> },
-  { id: 'stations', title: 'Find Stations', text: 'Station status and when it was last updated.', icon: <MapPin className="w-5 h-5" /> },
+  { id: 'stations', title: 'Find Stations', text: 'Map of demo charging stations around Miyapur, KPHB and Bachupally in Hyderabad.', icon: <MapPin className="w-5 h-5" /> },
 ];
 
 const LABELS: { kind: ReadingKind; text: string }[] = [

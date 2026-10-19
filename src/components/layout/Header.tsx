@@ -1,5 +1,6 @@
 import React from 'react';
-import { Sun, Moon, Zap, Radio, Activity, BookOpen } from 'lucide-react';
+import { Sun, Moon, Zap, Radio, Activity, BookOpen, UserRound, LogOut } from 'lucide-react';
+import { useAccount } from '../../context/AccountContext';
 import { useTheme } from '../../context/ThemeContext';
 import { useStationData } from '../../context/StationDataContext';
 import { StationStatusPill } from '../common/StationStatusPill';
@@ -11,6 +12,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ onOpenMethodology }) => {
   const { theme, toggleTheme } = useTheme();
   const { state, setDataSourceMode } = useStationData();
+  const { signedIn, user, openSignIn, signOut } = useAccount();
 
   const segment = (active: boolean) =>
     `px-2.5 py-1.5 rounded-md font-medium transition-all ${
@@ -51,6 +53,18 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMethodology }) => {
           <StationStatusPill className="hidden sm:inline-flex" />
           <div className="hidden sm:block">{toggle}</div>
 
+          {signedIn ? (
+            <button type="button" onClick={signOut} className="flex items-center gap-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] pl-1.5 pr-1.5 md:pr-3 py-1.5 text-xs font-semibold text-[var(--color-text-secondary)] hover:border-[var(--color-border-glow)] shadow-sm" aria-label={`Sign out of demo account (${user.name})`} title="Sign out of demo account">
+              <span className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#2A7B9B] to-[#57C785] text-white flex items-center justify-center text-[11px] font-bold">{user.initials}</span>
+              <span className="hidden md:inline">Demo account</span>
+              <LogOut className="hidden md:block w-3.5 h-3.5" />
+            </button>
+          ) : (
+            <button type="button" onClick={openSignIn} className={`${iconBtn} md:flex md:items-center md:gap-2 md:px-3.5 md:py-2 text-xs font-semibold`} aria-label="Sign in to demo account" title="Demo sign-in">
+              <UserRound className="w-5 h-5 md:w-4 md:h-4" />
+              <span className="hidden md:inline">Sign in</span>
+            </button>
+          )}
           <button type="button" onClick={onOpenMethodology} className={iconBtn} aria-label="Open methodology" title="Methodology">
             <BookOpen className="w-5 h-5" />
           </button>
