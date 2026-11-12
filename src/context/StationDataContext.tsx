@@ -98,6 +98,62 @@ export const StationDataProvider: React.FC<{ children: React.ReactNode }> = ({ c
     return () => clearInterval(timer);
   }, [state.dataSourceMode, simulatedStale]);
 
+  // Live mode: poll the backend. Only values the API actually returns are shown;
+  // if the API is unreachable the station is reported as unavailable, never as connected.
+  useEffect(() => {
+    if (state.dataSourceMode !== 'live') return;
+    let cancelled = false;
+    const load = async () => {
+      try {
+        const res = await fetch('/api/station/base-01');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const d = await res.json();
+        if (cancelled) return;
+        const toDate = (v: string | null) => (v ? new Date(v) : null);
+        setSimulatedStale(false);
+        setState((prev) =>
+          prev.dataSourceMode !== 'live'
+            ? prev
+            : {
+                ...prev,
+                operationalStatus: d.operationalStatus,
+                connectionStatus: d.connectionStatus,
+                hardware: d.hardware,
+                latestReadings: { ...d.latestReadings, timestamp: toDate(d.latestReadings.timestamp) },
+                // Use the server's age, not its clock, so a wrong laptop clock cannot fake freshness.
+                lastHeartbeat: d.secondsSinceHeartbeat === null ? null : new Date(Date.now() - d.secondsSinceHeartbeat * 1000),
+                staleThresholdSeconds: d.staleThresholdSeconds,
+                errorMessage:
+                  d.connectionStatus === 'unavailable'
+                    ? 'The backend is running but the station has not sent any data yet.'
+                    : null,
+              }
+        );
+      } catch {
+        if (cancelled) return;
+        setState((prev) =>
+          prev.dataSourceMode !== 'live'
+            ? prev
+            : {
+                ...prev,
+                operationalStatus: 'unknown',
+                connectionStatus: 'unavailable',
+                hardware: LIVE_HARDWARE,
+                latestReadings: EMPTY_READINGS,
+                lastHeartbeat: null,
+                errorMessage: 'Cannot reach the backend. Start the server and try again.',
+              }
+        );
+      }
+    };
+    load();
+    const timer = setInterval(load, 2000);
+    return () => {
+      cancelled = true;
+      clearInterval(timer);
+    };
+  }, [state.dataSourceMode]);
+
   // Freshness watchdog: evaluates the stale threshold for whichever source is active.
   useEffect(() => {
     const timer = setInterval(() => {
