@@ -12,13 +12,14 @@ interface PageHeaderProps {
 export const PageHeader: React.FC<PageHeaderProps> = ({ title, description, badge }) => {
   const { state } = useStationData();
   const isDemo = state.dataSourceMode === 'demo';
+  const hasLive = !isDemo && state.connectionStatus !== 'unavailable';
   return (
     <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-8 border-b border-[var(--color-border)]">
       <div className="space-y-2">
         <h1 className="h2-fluid text-[var(--color-text)]">{title}</h1>
         <p className="text-sm text-[var(--color-text-secondary)] max-w-xl">{description}</p>
       </div>
-      {badge ?? <DataBadge kind={isDemo ? 'simulated' : 'unavailable'} label={isDemo ? 'Simulated demo data' : 'No live data source'} />}
+      {badge ?? <DataBadge kind={isDemo ? 'simulated' : hasLive ? (state.connectionStatus === 'stale' ? 'stale' : 'live') : 'unavailable'} label={isDemo ? 'Simulated demo data' : hasLive ? (state.connectionStatus === 'stale' ? 'Live source, stale' : 'Live data') : 'No live data source'} />}
     </div>
   );
 };

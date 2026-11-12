@@ -12,6 +12,7 @@ import { BatteryGraphic } from '../components/visuals/BatteryGraphic';
 import { ProgressRing } from '../components/visuals/ProgressRing';
 import { MiniBarChart, Sparkline } from '../components/visuals/MiniCharts';
 import { ConnectorIcon } from '../components/visuals/ConnectorIcon';
+import { LiveMyEV, LiveSignInGate } from './LiveMyEV';
 import { DEMO_VEHICLE, SAMPLE_SESSION, formatInr, getSessions, stationById, weeklyEnergy, weeklyTotals } from '../data/demoData';
 
 const SignInGate: React.FC = () => {
@@ -61,6 +62,8 @@ const Stat: React.FC<{ icon: React.ReactNode; label: string; value: string; unit
 export const MyEVView: React.FC = () => {
   const { signedIn, user } = useAccount();
   const { isDemo, baseKind, r } = useReadingKind();
+  // Live mode uses a real backend account and real sessions; demo mode keeps the sample profile.
+  if (!isDemo) return signedIn ? <LiveMyEV /> : <LiveSignInGate />;
   if (!signedIn) return <SignInGate />;
 
   const sessions = getSessions();

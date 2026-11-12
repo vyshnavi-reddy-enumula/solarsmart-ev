@@ -9,6 +9,7 @@ import { MiniBarChart } from '../components/visuals/MiniCharts';
 import { useReadingKind } from '../hooks/useReadingKind';
 import { useAccount } from '../context/AccountContext';
 import { formatInr, getSessions, weeklyEnergy, weeklyTotals } from '../data/demoData';
+import { liveWeeklyEnergy, liveWeeklyTotals, useLiveSessions } from '../hooks/useLiveSessions';
 
 export const EnergyView: React.FC = () => {
   const { isDemo, isStale, secondsSinceLastHeartbeat, baseKind, derivedKind, fmt, r } = useReadingKind();
@@ -16,6 +17,9 @@ export const EnergyView: React.FC = () => {
   const sessions = getSessions();
   const week = weeklyEnergy(sessions);
   const totals = weeklyTotals(sessions);
+  const live = useLiveSessions();
+  const liveWeek = liveWeeklyEnergy(live.sessions);
+  const liveTotals = liveWeeklyTotals(live.sessions);
 
   return (
     <div className="space-y-12">
@@ -26,25 +30,27 @@ export const EnergyView: React.FC = () => {
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
           <div>
             <h2 className="text-base font-bold font-sans text-[var(--color-text)]">My charging</h2>
-            <p className="text-xs text-[var(--color-text-secondary)] mt-1">Sample energy use from the demo account.</p>
+            <p className="text-xs text-[var(--color-text-secondary)] mt-1">{isDemo ? 'Sample energy use from the demo account.' : 'Your recorded sessions, estimated from voltage × current.'}</p>
           </div>
-          <DataBadge kind="simulated" label="Sample data" />
+          {isDemo ? <DataBadge kind="simulated" label="Sample data" /> : <DataBadge kind="derived" />}
         </div>
         {signedIn ? (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
             <div className="lg:col-span-2">
-              <MiniBarChart data={week} unit="kWh per day" ariaLabel={`Energy used per day over the last 7 days (sample data). Total ${totals.kWh} kilowatt-hours.`} />
+              {isDemo
+                ? <MiniBarChart data={week} unit="kWh per day" ariaLabel={`Energy used per day over the last 7 days (sample data). Total ${totals.kWh} kilowatt-hours.`} />
+                : <MiniBarChart data={liveWeek} unit="Wh per day" ariaLabel={`Energy used per day over the last 7 days. Total ${liveTotals.wh} watt-hours.`} />}
             </div>
             <dl className="grid grid-cols-3 lg:grid-cols-1 gap-4">
-              <div className="card-flat"><dt className="text-xs text-[var(--color-text-muted)]">Total</dt><dd className="font-tabular text-xl font-semibold text-[var(--color-text)]">{totals.kWh} kWh</dd></div>
-              <div className="card-flat"><dt className="text-xs text-[var(--color-text-muted)]">Sessions</dt><dd className="font-tabular text-xl font-semibold text-[var(--color-text)]">{totals.sessions}</dd></div>
-              <div className="card-flat"><dt className="text-xs text-[var(--color-text-muted)]">Cost (illustrative)</dt><dd className="font-tabular text-xl font-semibold text-[var(--color-text)]">{formatInr(totals.cost)}</dd></div>
+              <div className="card-flat"><dt className="text-xs text-[var(--color-text-muted)]">Total</dt><dd className="font-tabular text-xl font-semibold text-[var(--color-text)]">{isDemo ? `${totals.kWh} kWh` : `${liveTotals.wh} Wh`}</dd></div>
+              <div className="card-flat"><dt className="text-xs text-[var(--color-text-muted)]">Sessions</dt><dd className="font-tabular text-xl font-semibold text-[var(--color-text)]">{isDemo ? totals.sessions : liveTotals.sessions}</dd></div>
+              <div className="card-flat"><dt className="text-xs text-[var(--color-text-muted)]">{isDemo ? 'Cost (illustrative)' : 'Peak power'}</dt><dd className="font-tabular text-xl font-semibold text-[var(--color-text)]">{isDemo ? formatInr(totals.cost) : `${liveTotals.peakW} W`}</dd></div>
             </dl>
           </div>
         ) : (
           <div className="card-flat flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <p className="text-sm text-[var(--color-text-secondary)]">Sign in with the demo account to see sample weekly energy use.</p>
-            <button type="button" onClick={openSignIn} className="btn-secondary self-start"><UserRound className="w-4 h-4 text-[var(--color-primary)]" /><span>Sign in (demo)</span></button>
+            <p className="text-sm text-[var(--color-text-secondary)]">{isDemo ? 'Sign in with the demo account to see sample weekly energy use.' : 'Sign in to see the energy from your own charging sessions.'}</p>
+            <button type="button" onClick={openSignIn} className="btn-secondary self-start"><UserRound className="w-4 h-4 text-[var(--color-primary)]" /><span>{isDemo ? 'Sign in (demo)' : 'Sign in'}</span></button>
           </div>
         )}
       </section>
@@ -69,7 +75,7 @@ export const EnergyView: React.FC = () => {
       </section>
 
       <Notice title="About these values">
-        Sample charging history comes from a demo account. Prototype voltage and current come from a sensor that is not connected yet, so demo values are simulated and power is always derived from them.
+        Sample charging history comes from a demo account. {isDemo ? 'Prototype voltage and current are simulated in demo mode' : 'Prototype voltage and current come from the station backend when the device is sending data'}, and power is always derived from them (P = V × I).
       </Notice>
     </div>
   );

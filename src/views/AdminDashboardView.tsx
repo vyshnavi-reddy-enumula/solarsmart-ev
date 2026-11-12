@@ -4,6 +4,7 @@ import { useStationData } from '../context/StationDataContext';
 import { DataBadge } from '../components/common/DataBadge';
 import { Notice } from '../components/common/Notice';
 import { HardwareLinkStatus, NodeLinkStatus, ReadingKind } from '../types/station';
+import { LiveOperatorPanel } from './LiveOperatorPanel';
 
 const NODES: { key: keyof HardwareLinkStatus; name: string; role: string; offLabel: string }[] = [
   { key: 'esp32Gateway', name: 'ESP32 gateway', role: 'Wi-Fi communication (planned)', offLabel: 'Not connected' },
@@ -37,18 +38,18 @@ export const AdminDashboardView: React.FC = () => {
             Status and link overview for {state.stationName}.
           </p>
         </div>
-        <DataBadge kind={isDemo ? 'simulated' : 'unavailable'} label={isDemo ? 'Simulated demo data' : 'No live data source'} />
+        <DataBadge kind={isDemo ? 'simulated' : state.connectionStatus === 'unavailable' ? 'unavailable' : state.connectionStatus === 'stale' ? 'stale' : 'live'} label={isDemo ? 'Simulated demo data' : state.connectionStatus === 'unavailable' ? 'No live data source' : state.connectionStatus === 'stale' ? 'Live source, stale' : 'Live data'} />
       </div>
 
       {isDemo ? (
         <Notice variant="simulated" icon={<Info className="w-5 h-5" />} title="Hardware links shown are simulated">
           No hardware is being read. Link states below demonstrate the interface only.
         </Notice>
-      ) : (
+      ) : state.errorMessage ? (
         <Notice variant="warning" icon={<AlertTriangle className="w-5 h-5" />} title="Station status unknown">
           {state.errorMessage}
         </Notice>
-      )}
+      ) : null}
 
       {isStale && (
         <Notice variant="warning" icon={<AlertTriangle className="w-5 h-5" />} title={`Stale data${isDemo ? ' (simulated)' : ''}`}>
@@ -93,6 +94,9 @@ export const AdminDashboardView: React.FC = () => {
         </div>
       </section>
 
+      {!isDemo && <LiveOperatorPanel />}
+
+      {isDemo && (
       <section className="card-flat flex items-start gap-4">
         <ClipboardList className="w-5 h-5 text-[var(--color-text-muted)] mt-0.5 flex-shrink-0" />
         <div className="space-y-1">
@@ -105,6 +109,7 @@ export const AdminDashboardView: React.FC = () => {
           </p>
         </div>
       </section>
+      )}
     </div>
   );
 };

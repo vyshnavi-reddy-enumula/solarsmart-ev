@@ -57,7 +57,7 @@ export const HeroGeometricVisual: React.FC = () => {
         </div>
 
         <p className="text-[11px] text-[var(--color-text-muted)] pt-1">
-          {isDemo ? 'Values on this card are simulated.' : 'No live data source is connected.'}
+          {isDemo ? 'Values on this card are simulated.' : state.connectionStatus === 'unavailable' ? 'No live data source is connected.' : 'Values on this card come from the station backend.'}
         </p>
       </div>
     </div>
